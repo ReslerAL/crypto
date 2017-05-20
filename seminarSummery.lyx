@@ -489,7 +489,7 @@ note:
 \end_layout
 
 \begin_layout Standard
-Commitment can be build from OWF
+Commitment can be build from OWP
 \end_layout
 
 \begin_layout Subsection*
@@ -627,6 +627,171 @@ If there is no
  
 \end_layout
 
+\begin_layout Subsection*
+Consistent Views
+\end_layout
+
+\begin_layout Standard
+We say that a pair of views 
+\begin_inset Formula $V_{i},V_{j}$
+\end_inset
+
+ are consistent (with respect to the protocol 
+\begin_inset Formula $\Pi$
+\end_inset
+
+ and input 
+\begin_inset Formula $x$
+\end_inset
+
+) if the outgoing messages implicit in 
+\begin_inset Formula $V_{i},x$
+\end_inset
+
+ are identical to the incoming messages reported in 
+\begin_inset Formula $V_{j}$
+\end_inset
+
+ and vice versa.
+\end_layout
+
+\begin_layout Subsubsection*
+Lemma (Local vs.
+ global consistency)
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $\Pi$
+\end_inset
+
+ be an n-party protocol and 
+\begin_inset Formula $x$
+\end_inset
+
+ its input.
+ Let 
+\begin_inset Formula $V_{1},V_{2},...,V_{n}$
+\end_inset
+
+ be n views (possibly incorrect).
+ Then all pairs 
+\begin_inset Formula $V_{i},V_{j}$
+\end_inset
+
+ are consistent with respect to 
+\begin_inset Formula $\Pi$
+\end_inset
+
+ and 
+\begin_inset Formula $x$
+\end_inset
+
+ if and only if there exist an honest execution of 
+\begin_inset Formula $\Pi$
+\end_inset
+
+ with public input 
+\begin_inset Formula $x$
+\end_inset
+
+ (and some choice of private input 
+\begin_inset Formula $w_{i}$
+\end_inset
+
+ and random inputs 
+\begin_inset Formula $r_{i}$
+\end_inset
+
+) in which 
+\begin_inset Formula $V_{i}$
+\end_inset
+
+ is the view of 
+\begin_inset Formula $P_{i}\:\forall i$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+proof:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\Longleftarrow:$
+\end_inset
+
+ by definition.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\Longrightarrow:$
+\end_inset
+
+ let 
+\begin_inset Formula $V_{1},...,V_{n}$
+\end_inset
+
+ be pairwise consistent views and let 
+\begin_inset Formula $w_{i},r_{i}$
+\end_inset
+
+ be be the private input and random input reported in view 
+\begin_inset Formula $V_{i}$
+\end_inset
+
+.
+ By the pairwise consistency of the views we get by induction on the number
+ of rounds 
+\begin_inset Formula $d$
+\end_inset
+
+, that the actual view of every player 
+\begin_inset Formula $P_{i}$
+\end_inset
+
+ after 
+\begin_inset Formula $d$
+\end_inset
+
+ rounds when 
+\begin_inset Formula $\Pi$
+\end_inset
+
+ is invoke on 
+\begin_inset Formula $(x,(w_{1},r_{1}),...,(w_{n},r_{n}))$
+\end_inset
+
+ is the same as the view of 
+\begin_inset Formula $P_{i}$
+\end_inset
+
+ in the first 
+\begin_inset Formula $d$
+\end_inset
+
+ rounds reported in 
+\begin_inset Formula $V_{i}$
+\end_inset
+
+.
+ It follow that the 
+\begin_inset Formula $n$
+\end_inset
+
+ views 
+\begin_inset Formula $V_{1},...,V_{n}$
+\end_inset
+
+ are consistent with the full execution of 
+\begin_inset Formula $\Pi.$
+\end_inset
+
+ 
+\end_layout
+
 \begin_layout Section*
 3.
  The protocol (in the commitment-hybrid model):
@@ -709,7 +874,7 @@ Let
 \begin_inset Formula $Com$
 \end_inset
 
- be an ideal commitment scheme - one can think of it like there is trusted
+ be an ideal commitment scheme - you can think of it like there is trusted
  third party that collect the string from the sender and send it to the
  receiver later
 \end_layout
@@ -736,7 +901,7 @@ width "100col%"
 special "none"
 height "1in"
 height_special "totalheight"
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -843,7 +1008,7 @@ consistent
 \end_layout
 
 \begin_layout Paragraph*
-Claim
+Claim 1
 \end_layout
 
 \begin_layout Standard
@@ -885,8 +1050,8 @@ If
 \end_inset
 
 always have output 1.
- Since these vies are produced by an honest execution of the protocol, they
- consistent with each other.
+ Since these views are produced by an honest execution of the protocol,
+ they consistent with each other.
  
 \end_layout
 
@@ -946,8 +1111,380 @@ otherwise, by the lemma, there exist at least two views which are inconsistent
 
 \end_layout
 
+\begin_layout Paragraph*
+Zero-Knowledge:
+\end_layout
+
 \begin_layout Standard
-need to write the lemma
+Let 
+\begin_inset Formula $V^{*}$
+\end_inset
+
+ be a malicious verifier.
+ We describe simulator 
+\begin_inset Formula $M$
+\end_inset
+
+ that use 
+\begin_inset Formula $V*$
+\end_inset
+
+ and the MPC simulator 
+\begin_inset Formula $S$
+\end_inset
+
+ as a black box.
+ We start with the case where 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+ is 
+\emph on
+perfectly 2-privacy.
+ 
+\emph default
+The Simulator on input 
+\begin_inset Formula $x$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Enumerate
+Run 
+\begin_inset Formula $V*$
+\end_inset
+
+on input 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $i,j$
+\end_inset
+
+ be the pair of indices sent by 
+\begin_inset Formula $V^{*}$
+\end_inset
+
+ is Step 2 of 
+\begin_inset Formula $\Pi_{R}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $M$
+\end_inset
+
+ simulate the two views 
+\begin_inset Formula $V_{i},V_{j}$
+\end_inset
+
+, by picking random 
+\begin_inset Formula $w_{i},w_{j}$
+\end_inset
+
+ and running 
+\begin_inset Formula $S(T=\{i,j\},x,(w_{i},w_{j}),1)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+(Note: the prover's communication in step 3 are trivial to simulate in the
+ commitment-hybrid model).
+ We prove that the above simulator is perfect.
+ Let 
+\begin_inset Formula $(x,w)$
+\end_inset
+
+ such that 
+\begin_inset Formula $R(x,w)=1$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+the randomness of 
+\begin_inset Formula $V^{*}$
+\end_inset
+
+ chosen by the simulator 
+\begin_inset Formula $M$
+\end_inset
+
+ is randomly distributed.
+ Its enough to look of deterministic 
+\begin_inset Formula $V^{*}$
+\end_inset
+
+after its randomness is set (to show that for each 
+\begin_inset Formula $r$
+\end_inset
+
+ the view is the same).
+ Set 
+\begin_inset Formula $r^{*}$
+\end_inset
+
+ to be 
+\begin_inset Formula $V^{*}$
+\end_inset
+
+'s randomness.
+\end_layout
+
+\begin_layout Itemize
+Let 
+\begin_inset Formula $i,j$
+\end_inset
+
+ be the verfier's selections determined by 
+\begin_inset Formula $r^{*}$
+\end_inset
+
+.
+ In the real execution of 
+\begin_inset Formula $\Pi_{R}$
+\end_inset
+
+ on 
+\begin_inset Formula $(x,w)$
+\end_inset
+
+, the inputs 
+\begin_inset Formula $w_{1},...,w_{n}$
+\end_inset
+
+to 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+ (picked by the prover) are such that 
+\begin_inset Formula $w_{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $w_{j}$
+\end_inset
+
+ are uniform and independent - same as in the simulator (conditioned on
+ 
+\begin_inset Formula $r^{*}$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Remain to show that condition on each choices of 
+\begin_inset Formula $r^{*},w_{i},w_{j}$
+\end_inset
+
+ the distribution of the views 
+\begin_inset Formula $(V_{i},V_{j})$
+\end_inset
+
+ received from the prover in step 3 of 
+\begin_inset Formula $\Pi_{R}$
+\end_inset
+
+ is identical to the distribution of 
+\begin_inset Formula $S(T=\{i,j\},x,(w_{i},w_{j}),1)$
+\end_inset
+
+.
+ Indeed, the 2-pricacy of 
+\begin_inset Formula $S$
+\end_inset
+
+ guarantee that the following holds even when further conditioned on every
+ possible choices of 
+\begin_inset Formula $w_{1},...,w_{n}$
+\end_inset
+
+ which consistent with 
+\begin_inset Formula $w_{i},w_{j},w$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Finally, if 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+is only statistical or computational 2-private, the quality of 
+\begin_inset Formula $M$
+\end_inset
+
+ change accordingly.
+ 
+\end_layout
+
+\begin_layout Paragraph*
+claim 2
+\end_layout
+
+\begin_layout Standard
+Under the same assumptions as in claim 1 but using a 
+\emph on
+statistically binding commitment scheme 
+\emph default
+Com then the protocol 
+\begin_inset Formula $\Pi_{R}^{Com}$
+\end_inset
+
+ is a zero knowledge with soundness error 
+\begin_inset Formula $\epsilon(k)\leq1-\frac{1}{\binom{n}{2}}+\delta(k)$
+\end_inset
+
+ where 
+\begin_inset Formula $k$
+\end_inset
+
+ is the security parameter for Com and 
+\begin_inset Formula $\delta(\cdot)$
+\end_inset
+
+ is some negligible function.
+ 
+\end_layout
+
+\begin_layout Paragraph*
+proof: 
+\end_layout
+
+\begin_layout Standard
+the proof is similar to the analysis of the GMW zero knowledge proof for
+ 3-Colorability
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-1"
+
+\end_inset
+
+ and therefore omitted.
+ 
+\end_layout
+
+\begin_layout Paragraph*
+Additional remarks:
+\end_layout
+
+\begin_layout Enumerate
+If 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+ is now perfectly correct, a cheating prover may violate the soundness of
+ 
+\begin_inset Formula $\Pi_{R}$
+\end_inset
+
+: on 
+\begin_inset Formula $x\notin L$
+\end_inset
+
+, she picks 
+\begin_inset Formula $w_{1},...,w_{n}$
+\end_inset
+
+ and 
+\begin_inset Formula $r_{1},...,r_{n}$
+\end_inset
+
+ on which the protocol incorrectly output 1, hereby making the verifier
+ incorrectly accept (no matter on the choice of 
+\begin_inset Formula $i,j$
+\end_inset
+
+ )
+\end_layout
+
+\begin_layout Enumerate
+We will later interested in minimizing the amount of communication in the
+ zero knowledge protocol.
+ Lets analyze the communication complexity of 
+\begin_inset Formula $\Pi_{R}$
+\end_inset
+
+: Implementing a statistically binding commitment to a string 
+\begin_inset Formula $m$
+\end_inset
+
+ of length 
+\begin_inset Formula $l$
+\end_inset
+
+ cost 
+\begin_inset Formula $l+poly(k)$
+\end_inset
+
+ bits of communication, where 
+\begin_inset Formula $k$
+\end_inset
+
+ is the security parameter.
+ This can be done by first committing to random seed 
+\begin_inset Formula $s\in\{0,1)^{k}$
+\end_inset
+
+ to a pseudorandom generator 
+\emph on
+G, 
+\emph default
+and then sending 
+\begin_inset Formula $m\oplus G(s)$
+\end_inset
+
+.
+ Note that the total length of the views in 
+\begin_inset Formula $\Pi_{R}$
+\end_inset
+
+ is 
+\begin_inset Formula $O(|w|)$
+\end_inset
+
+ plus the communication and randomness complexity of 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+ .
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+Which MPC do we use?
+\end_layout
+
+\begin_layout Standard
+We can use the GMW protocol we saw or the BGW.
+ We will want to choose protocol which is efficient.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+O.
+ Goldreich, S.
+ Micali, and A.
+ Widgerson.
+ How to Prove all NP-Statements in Zero-Knowledge, and a Methodology of
+ Cryptographic Protocol Design, In CRYPTO 1986, pages 171-185.
+ 
 \end_layout
 
 \end_body
