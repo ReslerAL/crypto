@@ -492,6 +492,33 @@ note:
 Commitment can be build from OWP
 \end_layout
 
+\begin_layout Subsubsection*
+Commitment-hybrid Model
+\end_layout
+
+\begin_layout Standard
+Today we will assume we have an idealize implementation commitment scheme,
+ where a string can be committed to by sending it to a trusted third party,
+ and later opened by having the committer instruct the trusted party to
+ reveal the commitment.
+ Alternatively, one can think of a direct physical implementation in which
+ the committed string is sent in locked box and the decommitment is done
+ by sending the key to this box.
+ The idea is first to analyze it with the ideal commitment which is easier
+ and enable us to focus on the new idea and later on 
+\begin_inset Quotes eld
+\end_inset
+
+compile
+\begin_inset Quotes erd
+\end_inset
+
+ it to real commitment scheme.
+ We will avoid in this talk from the compilation part.
+ You can find it in the article.
+ 
+\end_layout
+
 \begin_layout Subsection*
 Correctness:
 \end_layout
@@ -901,7 +928,7 @@ width "100col%"
 special "none"
 height "1in"
 height_special "totalheight"
-status open
+status collapsed
 
 \begin_layout Plain Layout
 
@@ -1469,6 +1496,532 @@ Which MPC do we use?
 \begin_layout Standard
 We can use the GMW protocol we saw or the BGW.
  We will want to choose protocol which is efficient.
+\end_layout
+
+\begin_layout Subsection*
+Coping with Statistical Correctness
+\end_layout
+
+\begin_layout Standard
+The protocol we showed used the perfect correctness of 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+ .
+ 
+\end_layout
+
+\begin_layout Paragraph*
+How? 
+\end_layout
+
+\begin_layout Standard
+if the correctness is not perfect there is probability that some of the
+ players will output 0 is positive and an unbounded malices prover can choose
+ randomness which will cause error.
+ Note that for completeness it doesn't matter because it happen only with
+ negligible probability we can achieve perfect completeness by just adding
+ that if the invocation of 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+ produced incorrect output the prover will send 
+\begin_inset Formula $w$
+\end_inset
+
+ to the verifier.
+ Since it happen only with neg prob the zero knowledge property will not
+ be affected.
+ 
+\end_layout
+
+\begin_layout Paragraph*
+Now 
+\end_layout
+
+\begin_layout Standard
+we want to adjust the protocol to use only statistically correct 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+ (i.e.
+ the probability that some player will output value different from the others
+ is 
+\emph on
+neg
+\emph default
+).
+ The idea is not giving the prover to choose the randomness.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status collapsed
+
+\begin_layout Plain Layout
+
+\series bold
+Zero-Knowledge proof 
+\begin_inset Formula $\Pi_{R}$
+\end_inset
+
+ in the commitment-hybrid model
+\end_layout
+
+\begin_layout Enumerate
+The prover picks at random 
+\begin_inset Formula $w_{1},...,w_{n}\in\{0,1\}^{m}$
+\end_inset
+
+such that 
+\begin_inset Formula $w_{1}\oplus...\oplus w_{n}=w$
+\end_inset
+
+.
+ She separately commits to each input 
+\begin_inset Formula $w_{i}$
+\end_inset
+
+ as to 
+\emph on
+n 
+\emph default
+random strings 
+\begin_inset Formula $r_{1}^{P},...,r_{n}^{P}$
+\end_inset
+
+ where each 
+\begin_inset Formula $r_{i}^{P}$
+\end_inset
+
+ is of the same length as the random input of 
+\begin_inset Formula $P_{i}$
+\end_inset
+
+ in 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Verifier send to the prover 
+\emph on
+n 
+\emph default
+random strings 
+\begin_inset Formula $r_{1}^{V},...,r_{n}^{V}$
+\end_inset
+
+ where 
+\begin_inset Formula $|r_{i}^{V}|=|r_{i}^{P}|$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Prover emulate the execution of 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+ on input 
+\begin_inset Formula $(x,w_{1},...,w_{n})$
+\end_inset
+
+ using randomness 
+\begin_inset Formula $r_{i}=r_{i}^{P}\oplus r_{i}^{V}$
+\end_inset
+
+ for each player 
+\begin_inset Formula $P_{i}$
+\end_inset
+
+.
+ Then the prover commit the view 
+\begin_inset Formula $V_{1},...,V_{n}$
+\end_inset
+
+ of this execution.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Verifier picks at random 
+\begin_inset Formula $i,j\in[n]$
+\end_inset
+
+ and sends them to the prover.
+\end_layout
+
+\begin_layout Enumerate
+Prover 
+\begin_inset Quotes eld
+\end_inset
+
+opens
+\begin_inset Quotes erd
+\end_inset
+
+ the commitments of 
+\begin_inset Formula $V_{i},V_{j}$
+\end_inset
+
+ as well as the corresponding committed inputs 
+\begin_inset Formula $w_{i},w_{j}$
+\end_inset
+
+ and her share of the randomness 
+\begin_inset Formula $r_{i}^{P},r_{j}^{P}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Verifier accepts if and only if:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+all the decommitments are successful 
+\end_layout
+
+\begin_layout Enumerate
+the outputs of both 
+\begin_inset Formula $P_{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $P_{j}$
+\end_inset
+
+ (which are determined by the views) are 1
+\end_layout
+
+\begin_layout Enumerate
+the two opened views are 
+\emph on
+consistent
+\emph default
+ with each other and with the opened inputs 
+\begin_inset Formula $w_{i},w_{j}$
+\end_inset
+
+ and their random input satisfy 
+\begin_inset Formula $r_{i}=r_{i}^{P}\oplus r_{i}^{V}$
+\end_inset
+
+ and 
+\begin_inset Formula $r_{j}=r_{j}^{P}\oplus r_{j}^{V}$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+proof:
+\end_layout
+
+\begin_layout Paragraph*
+completeness:
+\end_layout
+
+\begin_layout Standard
+Like before the probability that the verifier reject in an interaction with
+ honest prover is the same is the probability for error in 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+, negligible in our case.
+ We can achieve perfect completeness by letting the prover to send 
+\begin_inset Formula $w$
+\end_inset
+
+ in case of incorrect invocation of 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+.
+ Because this is happen with negligible probability this doesn't affect
+ zero-knowledge.
+\end_layout
+
+\begin_layout Paragraph*
+soundness:
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $x$
+\end_inset
+
+ be such that 
+\begin_inset Formula $R(x,w)=0\:\forall w$
+\end_inset
+
+.
+ We show that the verifier rejects with at least 
+\begin_inset Formula $\frac{1}{\binom{n}{2}}-\delta(k)$
+\end_inset
+
+ probability for some negligible function 
+\begin_inset Formula $\delta(\cdot)$
+\end_inset
+
+.
+ Assume without loss of generality that the prover always opens the commitments
+ and finish the protocol (otherwise the verifier will reject).
+ Since the inputs 
+\begin_inset Formula $w_{i}$
+\end_inset
+
+ as well as as the prover shares of the randomness 
+\begin_inset Formula $r_{i}^{P}$
+\end_inset
+
+ are committed in step 1, we have that the effective randomness 
+\begin_inset Formula $r_{i}=r_{i}^{P}\oplus r_{i}^{V}$
+\end_inset
+
+ determined is step 2 are independent of the inputs 
+\begin_inset Formula $w_{i}$
+\end_inset
+
+.
+ Now, we can look at all the cases:
+\end_layout
+
+\begin_layout Itemize
+the input and the randomness lead some player in an honest execution of
+ 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+ to incorrectly output 1.
+ This can happen only with negligible probability.
+ 
+\end_layout
+
+\begin_layout Itemize
+otherwise (all player output 0).
+ We have two sub-cases:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The views committed in step 3 are obtained by honestly running 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+ with the inputs 
+\begin_inset Formula $w_{i}$
+\end_inset
+
+ and the randomness 
+\begin_inset Formula $r_{i}$
+\end_inset
+
+.
+ In this case all views imply output 0 and the verifier reject
+\end_layout
+
+\begin_layout Itemize
+Otherwise, either the input of some view is different from 
+\begin_inset Formula $w_{i}$
+\end_inset
+
+, or the randomness different from 
+\begin_inset Formula $r_{i}$
+\end_inset
+
+ or we have pair with inconsistent views.
+ Either way, an inconsistency will be detected with at least 
+\begin_inset Formula $\frac{1}{\binom{n}{2}}$
+\end_inset
+
+ probability.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Overall, the verifier rejection probability is at least 
+\begin_inset Formula $\frac{1}{\binom{n}{2}}-\delta(k)$
+\end_inset
+
+ where 
+\begin_inset Formula $\delta$
+\end_inset
+
+ is the error probability of 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Paragraph*
+Zero-Knowledge:
+\end_layout
+
+\begin_layout Standard
+Let 
+\emph on
+Sim 
+\emph default
+be the simulator we have from the 2-privacy of 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+.
+ We will describe simulator 
+\emph on
+S 
+\emph default
+of dishonest verifier 
+\begin_inset Formula $V^{*}$
+\end_inset
+
+
+\emph on
+.
+ 
+\emph default
+On input 
+\begin_inset Formula $(k,x):$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Run 
+\begin_inset Formula $V^{*}$
+\end_inset
+
+ on input 
+\begin_inset Formula $(k,x)$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $r_{1}^{V^{*}},...,r_{n}^{V^{*}}$
+\end_inset
+
+be the strings sent by 
+\begin_inset Formula $V^{*}$
+\end_inset
+
+ in step 2 and 
+\begin_inset Formula $i,j$
+\end_inset
+
+ be the pair of indices sent in step 4.
+\end_layout
+
+\begin_layout Enumerate
+Pick random 
+\begin_inset Formula $w_{i},w_{j}$
+\end_inset
+
+ and run 
+\begin_inset Formula $Sim(k,\{i,j\},x,(w_{i},w_{j}),1)$
+\end_inset
+
+ to simulate the pair of views 
+\begin_inset Formula $(V_{i},V_{j})$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $r_{i},r_{j}$
+\end_inset
+
+ be the pair of random inputs contained in the simulated views.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Use the above 
+\begin_inset Formula $w_{i},w_{j},V_{i},V_{j}$
+\end_inset
+
+ and 
+\begin_inset Formula $r_{i}^{P}=r_{i}\oplus r_{i}^{V^{*}},r_{j}^{P}=r_{j}\oplus r_{j}^{V^{*}}$
+\end_inset
+
+ to simulate the prover decommitments in step 5.
+ 
+\end_layout
+
+\begin_layout Standard
+The correctness of 
+\emph on
+S 
+\emph default
+is similar to the case where 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+ is perfect correct.
+ The only different is that now random inputs 
+\begin_inset Formula $r_{i}$
+\end_inset
+
+ used by the prover for running 
+\begin_inset Formula $\Pi_{f}$
+\end_inset
+
+ are generated jointly with 
+\begin_inset Formula $V^{*}$
+\end_inset
+
+.
+ But since the prover's share of randomness 
+\begin_inset Formula $r_{i}^{P}$
+\end_inset
+
+ are independent of the verifier's share 
+\begin_inset Formula $r_{i}^{V^{*}}$
+\end_inset
+
+, the views 
+\begin_inset Formula $(V_{i},V_{j})$
+\end_inset
+
+ sent in step 5 are indistinguishable from the output of 
+\begin_inset Formula $Sim(k,\{i,j\},x,(w_{i},w_{j}),1)$
+\end_inset
+
+ even when conditioning on the randomness of 
+\begin_inset Formula $V^{*}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section*
+4.
+ Zero-knowledge from MPC in the Malicious Model.
 \end_layout
 
 \begin_layout Bibliography
